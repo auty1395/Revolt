@@ -90,6 +90,7 @@ public class gameFramework extends Applet implements Runnable, KeyListener, Mous
 		framePeriod=15; //may be adjusted to change the speed that
 						//the game runs.
 		addKeyListener(this); //tell the class to listen for KeyEvents
+		addMouseMotionListener(this);
 		dim=getSize();
 		img=createImage(dim.width, dim.height);//create back buffer
 		g=img.getGraphics(); //create Graphics obj to draw on back buffer
@@ -135,7 +136,7 @@ public class gameFramework extends Applet implements Runnable, KeyListener, Mous
 				g.drawString("[" + levels[currentLevel].walls[i].width + "," + levels[currentLevel].walls[i].height + "]", 340, 50 + i*10);
 			}
 			
-			g.drawString("(" + mouseX + "," + mouseY + ")", 720, 10);
+			g.drawString("(" + mouseX + "," + mouseY + ")", 690, 10);
 		}
 		
 		player.draw(g);
