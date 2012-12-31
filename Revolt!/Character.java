@@ -6,8 +6,8 @@ public class Character
 	public double x, y, xvel, yvel;
 	public boolean isGrounded = false, movingLeft = false, movingRight = false, isJumping = false, fallThrough = false;
 	final int fallThroughTicks = 5;
-	final int height = 40;
-	final int width = 30;
+	public final int height = 40;
+	public final int width = 30;
 	final double gravity = 50;
 	final double speed = 200;
 	final double jumpVelocity = 1100;
@@ -28,7 +28,7 @@ public class Character
 		else if(movingRight)g.setColor(Color.red);
 		else g.setColor(Color.green);
 		
-		g.fillRect((int)(x-5), (int)(y-5), width, height);
+		g.fillRect((int)(x), (int)(y), width, height);
 	}
 	
 	
@@ -52,7 +52,7 @@ public class Character
 			{
 				if(  y + height < shelfs[i].y + 1 && y + height + yvel* time > shelfs[i].y)
 				{
-					if( x > shelfs[i].x - width && x < shelfs[i].x + shelfs[i].length + width)
+					if( x > shelfs[i].x - width && x < shelfs[i].x + shelfs[i].length)
 					{
 						isCollidingDown = true;
 						y = shelfs[i].y - height;
@@ -120,6 +120,3 @@ public class Character
 	}
 	
 }
-	
-	
-	

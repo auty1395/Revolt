@@ -1,5 +1,6 @@
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.*;
 
 public class Level
 {
@@ -17,12 +18,15 @@ public class Level
 	public Image background;
 	
 	
-	Level(int numPlatforms, int numWalls, int numObjects, Character character)
+	Level(int numPlatforms, int numWalls, int numObjects, Character character, Image background)
 	{
 		shelves = new Platform[numPlatforms];
 		walls = new Wall[numWalls];
 		objects = new gameObject[numObjects];
 		levelPlayer  = character;
+		this.background = background;
+		
+	
 		
 		for( int i = 0; i < shelves.length; i++) shelves[i] = new Platform(0, 0, 0); //initalize platforms
 		for( int i = 0; i < walls.length; i++) walls[i] = new Wall(0, 0, 0, 0); //initalize walls
@@ -30,7 +34,8 @@ public class Level
 	
 	public void draw(Graphics g)
 	{
-		g.drawImage(background, 0, 0, null); // draws the background image
+		g.drawImage(background, 0, 0,750, 600, null); // draws the background image
+		
 		for(int i = 0; i < objects.length; i++) objects[i].draw(g); //draws each of the gameObjects
 
 		

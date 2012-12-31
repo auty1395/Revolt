@@ -17,7 +17,9 @@ public class gameFramework extends Applet implements Runnable, KeyListener, Mous
 	Graphics g; // used to draw on the back buffer
 	
 	Character player;
-	Image background;
+	Bird bird;
+	Image background0;
+	Image birdsprite;
 	
 	final int NUM_LEVELS = 1;
 	Level[] levels;
@@ -39,50 +41,57 @@ public class gameFramework extends Applet implements Runnable, KeyListener, Mous
 		resize(750,600); //can be set to any dimension desired
 		// INITIALIZE ANY OF YOUR OWN VARIABLES HERE
 		
-		player = new Character(100, 10);
+		player = new Character(100, 10); //initalize player
+		levels = new Level[NUM_LEVELS]; //initalize level array
 		
-		levels = new Level[NUM_LEVELS];
-		levels[0] = new Level(11, 7,0, player);
+		try  //try to load level background images;
+		{
+			background0 = getImage(new URL(getCodeBase(), "Revolt! Lvl1 The Apartment.jpeg"));
+			birdsprite = getImage(new URL(getCodeBase(), "bird.gif"));
+			
+		}
+		catch(MalformedURLException e)
+		{
+			System.out.println(e);
+		}
+		
+		
+		bird = new Bird(birdsprite, 200, 400, 70, 70);
+		
+		levels[0] = new Level(11, 7,1, player, background0 );
+		levels[0].objects[0] = bird;
 		
 		levels[0].startx = 0;
 		levels[0].starty = 350;
 		levels[0].endx = 650;
 		levels[0].endy = 480;
 		
-		levels[0].shelves[0] = new Platform(0,289,126);
-		levels[0].shelves[1] = new Platform(212,160,33);
-		levels[0].shelves[2] = new Platform(203,403,46);
-		levels[0].shelves[3] = new Platform(285,311,45);
-		levels[0].shelves[4] = new Platform(300,170,105);
-		levels[0].shelves[5] = new Platform(485,403,52);
-		levels[0].shelves[6] = new Platform(488,254,49);
-		levels[0].shelves[7] = new Platform(489,139,48);
-		levels[0].shelves[8] = new Platform(576,370,57);
-		levels[0].shelves[9] = new Platform(694,221,56);
-		levels[0].shelves[10] = new Platform(689,297,61);
+		levels[0].shelves[0] = new Platform(0,284,150);
+		levels[0].shelves[1] = new Platform(212,155,37);
+		levels[0].shelves[2] = new Platform(203,398,46);
+		levels[0].shelves[3] = new Platform(285,307,46);
+		levels[0].shelves[4] = new Platform(300,166,105);
+		levels[0].shelves[5] = new Platform(485,399,52);
+		levels[0].shelves[6] = new Platform(488,251,49);
+		levels[0].shelves[7] = new Platform(489,135,48);
+		levels[0].shelves[8] = new Platform(576,365,57);
+		levels[0].shelves[9] = new Platform(695,216,56);
+		levels[0].shelves[10] = new Platform(698,292,61);
 		
 		levels[0].walls[0] = new Wall(-10, -400, 10, 1100);
 		levels[0].walls[1] = new Wall(750, -400, 10, 1100);
-		levels[0].walls[2] = new Wall(-10, 535, 770, 70);
-		levels[0].walls[3] = new Wall(256,160,35,375);
-		levels[0].walls[4] = new Wall(344,256,46,205);
+		levels[0].walls[2] = new Wall(-10, 530, 770, 70);
+		levels[0].walls[3] = new Wall(250,155,35,375);
+		levels[0].walls[4] = new Wall(344,251,46,205);
 		levels[0].walls[5] = new Wall(416, -100, 37, 328);
-		levels[0].walls[6] = new Wall(538, 95, 37, 510);
+		levels[0].walls[6] = new Wall(538, 90, 40, 510);
 		
 		
 		
 		
 		
-		try
-		{
-			levels[0].background = getImage(new URL(getCodeBase(), "Revolt! Lvl1 The Apartment.jpeg"));
-			//levels[0].background = getImage(new URL(getCodeBase(), "bird.gif"));
-		}
-		catch(MalformedURLException e)
-		{
-			System.out.println(e);
-		}
-		System.out.println(background);
+	
+		
 		
 		
 		endTime=0;
@@ -113,8 +122,11 @@ public class gameFramework extends Applet implements Runnable, KeyListener, Mous
 
 		levels[currentLevel].draw(g);
 		
+		player.draw(g);
+		
 		if (debugIsVisible == true)
 		{			
+			Color prev = g.getColor(); // save the current color of g (graphics) so we can set it back when we're done
 			g.setColor(Color.green);
 			
 			g.drawString((int)player.x + "", 10, 10);
@@ -137,9 +149,38 @@ public class gameFramework extends Applet implements Runnable, KeyListener, Mous
 			}
 			
 			g.drawString("(" + mouseX + "," + mouseY + ")", 690, 10);
+			
+			
+			
+			//####################  addition-- draw lines where platforms are and boxes around walls ##########
+			
+			g.setColor(Color.blue);
+			for (int i = 0; i < levels[currentLevel].shelves.length; i++)  //draw blue lines where each platform is
+			{
+				g.drawLine(	(int)	levels[currentLevel].shelves[i].x,
+								(int)	levels[currentLevel].shelves[i].y, 
+								(int)	levels[currentLevel].shelves[i].x + levels[currentLevel].shelves[i].length,
+								(int)	levels[currentLevel].shelves[i].y);
+			}
+			
+			g.setColor(Color.red);
+			for (int i = 0; i < levels[currentLevel].walls.length; i++)    //draw red boxes around each of the walls
+			{
+				g.drawRect(	(int)	levels[currentLevel].walls[i].x,
+								(int)	levels[currentLevel].walls[i].y,
+								(int)	levels[currentLevel].walls[i].width,
+								(int)	levels[currentLevel].walls[i].height);
+			}
+			//#################### end addition
+			
+			
+			g.setColor(prev); // reset the color of g to what it was before this draw method
+
+
+			
 		}
 		
-		player.draw(g);
+		
 				
 		
 		// CODE TO DRAW GRAPHICS HERE
@@ -173,6 +214,8 @@ public class gameFramework extends Applet implements Runnable, KeyListener, Mous
 			startTime=System.currentTimeMillis();
 			// CODE TO EXECUTE A FRAME OF THE GAME HERE
 			
+			
+			
 			if (toggleDebug == true) 
 			{
 				if (debugIsVisible == false) debugIsVisible = true;
@@ -181,6 +224,8 @@ public class gameFramework extends Applet implements Runnable, KeyListener, Mous
 			}
 			
 			player.update(framePeriod, levels[currentLevel].shelves, levels[currentLevel].walls);
+			levels[currentLevel].update(framePeriod);
+			
 			if(abs(player.x - levels[currentLevel].endx) < 30 && abs(player.y - levels[currentLevel].endy) < 30)
 			{	
 				currentLevel++;
@@ -194,7 +239,7 @@ public class gameFramework extends Applet implements Runnable, KeyListener, Mous
 				player.y = levels[currentLevel].starty;
 				levelStart = false;
 			}
-			
+						
 			repaint();
 			try{ //regulate the speed of the game
 				endTime=System.currentTimeMillis();
