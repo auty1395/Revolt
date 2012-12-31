@@ -45,7 +45,7 @@ public class gameFramework extends Applet implements Runnable, KeyListener{
 		levels[0] = new Level(11, 7);
 		
 		levels[0].startx = 0;
-		levels[0].starty = 500;
+		levels[0].starty = 450;
 		levels[0].endx = 650;
 		levels[0].endy = 480;
 		
