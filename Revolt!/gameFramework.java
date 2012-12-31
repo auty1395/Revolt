@@ -8,7 +8,7 @@ import java.net.*;
 import javax.imageio.*;
 import static java.lang.Math.*;
 
-public class gameFramework extends Applet implements Runnable, KeyListener{
+public class gameFramework extends Applet implements Runnable, KeyListener, MouseMotionListener{
 
 	Thread thread; // used to run the game
 	
@@ -21,8 +21,8 @@ public class gameFramework extends Applet implements Runnable, KeyListener{
 	
 	final int NUM_LEVELS = 1;
 	Level[] levels;
-	int currentLevel = 0;
-	boolean levelStart = true;
+	int currentLevel = 0, mouseX, mouseY;
+	boolean levelStart = true, toggleDebug = false, debugIsVisible = false;
 	
 	
 	
@@ -33,7 +33,7 @@ public class gameFramework extends Applet implements Runnable, KeyListener{
 	* This method is called when the applet is first created.
 	*/
 	public void init(){
-		
+		 
 		System.out.println("Start Init");
 		
 		resize(750,600); //can be set to any dimension desired
@@ -45,11 +45,11 @@ public class gameFramework extends Applet implements Runnable, KeyListener{
 		levels[0] = new Level(11, 7);
 		
 		levels[0].startx = 0;
-		levels[0].starty = 500;
+		levels[0].starty = 350;
 		levels[0].endx = 650;
 		levels[0].endy = 480;
 		
-		levels[0].shelves[0] = new Platform(0,289,148);
+		levels[0].shelves[0] = new Platform(0,289,126);
 		levels[0].shelves[1] = new Platform(212,160,33);
 		levels[0].shelves[2] = new Platform(203,403,46);
 		levels[0].shelves[3] = new Platform(285,311,45);
@@ -64,7 +64,7 @@ public class gameFramework extends Applet implements Runnable, KeyListener{
 		levels[0].walls[0] = new Wall(-10, -400, 10, 1100);
 		levels[0].walls[1] = new Wall(750, -400, 10, 1100);
 		levels[0].walls[2] = new Wall(-10, 535, 770, 70);
-		levels[0].walls[3] = new Wall(250,160,35,375);
+		levels[0].walls[3] = new Wall(256,160,35,375);
 		levels[0].walls[4] = new Wall(344,256,46,205);
 		levels[0].walls[5] = new Wall(416, -100, 37, 328);
 		levels[0].walls[6] = new Wall(538, 95, 37, 510);
@@ -109,10 +109,37 @@ public class gameFramework extends Applet implements Runnable, KeyListener{
 		
 		g.setColor(Color.black); //set color to clear the screen with
 		g.fillRect(0,0,750,600); //clear the screen
-		
+
 		levels[currentLevel].draw(g);
 		
+		if (debugIsVisible == true)
+		{			
+			g.setColor(Color.green);
+			
+			g.drawString((int)player.x + "", 10, 10);
+			g.drawString((int)player.y + "", 10, 20);
+			
+			g.drawString("Shelves: ID, X, Y, LENGTH", 10, 40);
+			for (int i = 0; i < levels[currentLevel].shelves.length; i++)
+			{
+				g.drawString("S" + i, (int)levels[currentLevel].shelves[i].x, (int)levels[currentLevel].shelves[i].y);
+				g.drawString("S" + i + ": (" + levels[currentLevel].shelves[i].x + "," + levels[currentLevel].shelves[i].y + ")", 10, 50 + i*10);
+				g.drawString(levels[currentLevel].shelves[i].length + "", 110, 50 + i*10);
+			}
+			
+			g.drawString("Walls: ID, X, Y, WIDTH, HEIGHT", 200, 40);
+			for (int i = 0; i < levels[currentLevel].walls.length; i++)
+			{
+				g.drawString("W" + i, (int)levels[currentLevel].walls[i].x, (int)levels[currentLevel].walls[i].y);
+				g.drawString("W" + i + ": (" + levels[currentLevel].walls[i].x + "," + levels[currentLevel].walls[i].y + ")", 200, 50 + i*10);
+				g.drawString("[" + levels[currentLevel].walls[i].width + "," + levels[currentLevel].walls[i].height + "]", 340, 50 + i*10);
+			}
+			
+			g.drawString("(" + mouseX + "," + mouseY + ")", 720, 10);
+		}
+		
 		player.draw(g);
+				
 		
 		// CODE TO DRAW GRAPHICS HERE
 	gfx.drawImage(img,0,0,this); //copys back buffer onto the screen
@@ -144,6 +171,13 @@ public class gameFramework extends Applet implements Runnable, KeyListener{
 			//System.out.println("tick");
 			startTime=System.currentTimeMillis();
 			// CODE TO EXECUTE A FRAME OF THE GAME HERE
+			
+			if (toggleDebug == true) 
+			{
+				if (debugIsVisible == false) debugIsVisible = true;
+				else if (debugIsVisible == true) debugIsVisible = false;
+				toggleDebug = false;
+			}
 			
 			player.update(framePeriod, levels[currentLevel].shelves, levels[currentLevel].walls);
 			if(abs(player.x - levels[currentLevel].endx) < 30 && abs(player.y - levels[currentLevel].endy) < 30)
@@ -181,9 +215,11 @@ public class gameFramework extends Applet implements Runnable, KeyListener{
 		}else if(e.getKeyCode()==KeyEvent.VK_DOWN){
 			player.fallThrough = true;
 		}else if(e.getKeyCode()==KeyEvent.VK_LEFT){
-		player.movingLeft = true;
+			player.movingLeft = true;
 		}else if(e.getKeyCode()==KeyEvent.VK_RIGHT){
-		player.movingRight = true;
+			player.movingRight = true;
+		}else if(e.getKeyCode()==KeyEvent.VK_D){
+			toggleDebug = true;
 		}
 	}
 	
@@ -209,5 +245,15 @@ public class gameFramework extends Applet implements Runnable, KeyListener{
 	* It might be used if the game involved the user typing in text.
 	*/
 	public void keyTyped(KeyEvent e){
+	}
+	
+	public void mouseMoved(MouseEvent e){
+		mouseX = e.getX();
+		mouseY = e.getY();
+	}
+	
+	public void mouseDragged(MouseEvent e){
+		mouseX = e.getX();
+		mouseY = e.getY();
 	}
 }
