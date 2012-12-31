@@ -10,7 +10,7 @@ public class Character
 	final int width = 30;
 	final double gravity = 50;
 	final double speed = 200;
-	final double jumpVelocity = 1000;
+	final double jumpVelocity = 1100;
 	final double descendVelocity = 200;
 	
 	
@@ -43,9 +43,7 @@ public class Character
 		if(isJumping) jump(jumpVelocity); 
 		
 		double time = (double)ms/1000;
-		x += xvel* time;
-		y += yvel* time;
-		
+				
 		boolean isCollidingDown = false;
 		
 		if(yvel >= 0 && !fallThrough)
@@ -66,7 +64,7 @@ public class Character
 		
 		for(int i = 0; i < walls.length; i++)
 		{
-			if((y + yvel*time + height > walls[i].y) && (y + yvel*time < walls[i].y + walls[i].height)) //in between the top and bottom of the wall
+			if((y + height > walls[i].y) && (y <= walls[i].y + walls[i].height)) //in between the top and bottom of the wall
 			{
 				System.out.println ("a");
 				if((x + width <= walls[i].x) && (x + width + xvel*time > walls[i].x)) // moving through the plane created by the walls left face
@@ -85,7 +83,7 @@ public class Character
 			if((x + xvel*time + width > walls[i].x) && (x + xvel*time < walls[i].x + walls[i].width)) //in between the left and right sides of the wall
 			{
 				System.out.println ("b");
-				if((y + height <= walls[i].y + 1) && (y + height + yvel*time > walls[i].y))
+				if((y + height <= walls[i].y +5) && (y + height + yvel*time > walls[i].y))
 				{
 					System.out.println ("b1");
 					y = walls[i].y - height;
@@ -108,6 +106,12 @@ public class Character
 		}
 		if(isGrounded) yvel = 0;
 		//if(isGrounded) System.out.println("Grounded!");
+		
+		x += xvel* time; //update player's x position
+		y += yvel* time; //update player's y position
+
+		
+		
 	}
 	
 	public void jump( double velocity)
