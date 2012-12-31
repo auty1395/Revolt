@@ -13,6 +13,7 @@ public class Level
 	
 	Character levelPlayer;
 	int endx, endy;
+	int endxDif, endyDif;
 	int startx, starty;
 	
 	public Image background;

@@ -65,6 +65,8 @@ public class gameFramework extends Applet implements Runnable, KeyListener, Mous
 		levels[0].starty = 350;
 		levels[0].endx = 650;
 		levels[0].endy = 480;
+		levels[0].endxDif = 30;
+		levels[0].endyDif = 30;
 		
 		levels[0].shelves[0] = new Platform(0,284,150);
 		levels[0].shelves[1] = new Platform(212,155,37);
@@ -118,10 +120,10 @@ public class gameFramework extends Applet implements Runnable, KeyListener, Mous
 		//########## clear canvas
 		g.setColor(Color.black); //set color to clear the screen with
 		g.fillRect(0,0,750,600); //clear the screen
-		
-		//########### draw important stuff
+				//########### draw important stuff
 		levels[currentLevel].draw(g); //draw the current level
 		player.draw(g);					//draw the player
+
 		
 		//########### then draw debug on top
 		if (debugIsVisible == true) drawDebug(g); //draw the debug screen if debugIsVisible 
@@ -162,8 +164,11 @@ public class gameFramework extends Applet implements Runnable, KeyListener, Mous
 				if (debugIsVisible == false) debugIsVisible = true;
 				else if (debugIsVisible == true) debugIsVisible = false;
 				toggleDebug = false;
+
 			}				
-			if(abs(player.x - levels[currentLevel].endx) < 30 && abs(player.y - levels[currentLevel].endy) < 30) //if player is near the level's end, end the level
+			
+			if(abs(player.x - levels[currentLevel].endx) < levels[currentLevel].endxDif && abs(player.y - levels[currentLevel].endy) < levels[currentLevel].endyDif)
+
 			{	
 				currentLevel++;
 				if(currentLevel >= NUM_LEVELS) currentLevel = 0;
@@ -247,60 +252,60 @@ public class gameFramework extends Applet implements Runnable, KeyListener, Mous
 
 	public void drawDebug(Graphics g)
 	{
+			
+		Color prev = g.getColor(); // save the current color of g (graphics) so we can set it back when we're done
+		g.setColor(Color.green);
 		
-				
-			Color prev = g.getColor(); // save the current color of g (graphics) so we can set it back when we're done
-			g.setColor(Color.green);
-			
-			g.drawString((int)player.x + "", 10, 10);
-			g.drawString((int)player.y + "", 10, 20);
-			
-			g.drawString("Shelves: ID, X, Y, LENGTH", 10, 40);
-			for (int i = 0; i < levels[currentLevel].shelves.length; i++)
-			{
-				g.drawString("S" + i, (int)levels[currentLevel].shelves[i].x, (int)levels[currentLevel].shelves[i].y);
-				g.drawString("S" + i + ": (" + levels[currentLevel].shelves[i].x + "," + levels[currentLevel].shelves[i].y + ")", 10, 50 + i*10);
-				g.drawString(levels[currentLevel].shelves[i].length + "", 110, 50 + i*10);
-			}
-			
-			g.drawString("Walls: ID, X, Y, WIDTH, HEIGHT", 200, 40);
-			for (int i = 0; i < levels[currentLevel].walls.length; i++)
-			{
-				g.drawString("W" + i, (int)levels[currentLevel].walls[i].x, (int)levels[currentLevel].walls[i].y);
-				g.drawString("W" + i + ": (" + levels[currentLevel].walls[i].x + "," + levels[currentLevel].walls[i].y + ")", 200, 50 + i*10);
-				g.drawString("[" + levels[currentLevel].walls[i].width + "," + levels[currentLevel].walls[i].height + "]", 340, 50 + i*10);
-			}
-			
-			g.drawString("(" + mouseX + "," + mouseY + ")", 690, 10);
-			
-			
-			
-			//####################  addition-- draw lines where platforms are and boxes around walls ##########
-			
-			g.setColor(Color.blue);
-			for (int i = 0; i < levels[currentLevel].shelves.length; i++)  //draw blue lines where each platform is
-			{
-				g.drawLine(	(int)	levels[currentLevel].shelves[i].x,
-								(int)	levels[currentLevel].shelves[i].y, 
-								(int)	levels[currentLevel].shelves[i].x + levels[currentLevel].shelves[i].length,
-								(int)	levels[currentLevel].shelves[i].y);
-			}
-			
-			g.setColor(Color.red);
-			for (int i = 0; i < levels[currentLevel].walls.length; i++)    //draw red boxes around each of the walls
-			{
-				g.drawRect(	(int)	levels[currentLevel].walls[i].x,
-								(int)	levels[currentLevel].walls[i].y,
-								(int)	levels[currentLevel].walls[i].width,
-								(int)	levels[currentLevel].walls[i].height);
-			}
-			//#################### end addition
-			
-			
-			g.setColor(prev); // reset the color of g to what it was before this draw method
+		g.drawString((int)player.x + "", 10, 10);
+		g.drawString((int)player.y + "", 10, 20);
+		
+		g.drawString("Shelves: ID, X, Y, LENGTH", 10, 40);
+		for (int i = 0; i < levels[currentLevel].shelves.length; i++)
+		{
+			g.drawString("S" + i, (int)levels[currentLevel].shelves[i].x, (int)levels[currentLevel].shelves[i].y);
+			g.drawString("S" + i + ": (" + levels[currentLevel].shelves[i].x + "," + levels[currentLevel].shelves[i].y + ")", 10, 50 + i*10);
+			g.drawString(levels[currentLevel].shelves[i].length + "", 110, 50 + i*10);
+		}
+		
+		g.drawString("Walls: ID, X, Y, WIDTH, HEIGHT", 200, 40);
+		for (int i = 0; i < levels[currentLevel].walls.length; i++)
+		{
+			g.drawString("W" + i, (int)levels[currentLevel].walls[i].x, (int)levels[currentLevel].walls[i].y);
+			g.drawString("W" + i + ": (" + levels[currentLevel].walls[i].x + "," + levels[currentLevel].walls[i].y + ")", 200, 50 + i*10);
+			g.drawString("[" + levels[currentLevel].walls[i].width + "," + levels[currentLevel].walls[i].height + "]", 340, 50 + i*10);
+		}
+		
+		g.drawString("(" + mouseX + "," + mouseY + ")", 690, 10);
+		
+		g.drawString("FINISH", levels[currentLevel].endx - 20, levels[currentLevel].endy);
+		g.drawRect(levels[currentLevel].endx - levels[currentLevel].endxDif, levels[currentLevel].endy - levels[currentLevel].endyDif, 2*levels[currentLevel].endxDif, 2*levels[currentLevel].endyDif);
+		
+		
+		g.setColor(Color.blue);
+		for (int i = 0; i < levels[currentLevel].shelves.length; i++)  //draw blue lines where each platform is
+		{
+			g.drawLine(	(int)	levels[currentLevel].shelves[i].x,
+							(int)	levels[currentLevel].shelves[i].y, 
+							(int)	levels[currentLevel].shelves[i].x + levels[currentLevel].shelves[i].length,
+							(int)	levels[currentLevel].shelves[i].y);
+		}
+		
+		g.setColor(Color.red);
+		for (int i = 0; i < levels[currentLevel].walls.length; i++)    //draw red boxes around each of the walls
+		{
+			g.drawRect(	(int)	levels[currentLevel].walls[i].x,
+							(int)	levels[currentLevel].walls[i].y,
+							(int)	levels[currentLevel].walls[i].width,
+							(int)	levels[currentLevel].walls[i].height);
+		}	
+		
+		g.setColor(prev); // reset the color of g to what it was before this draw method
 
 
-			
+		
+	
+
+		
 	}
 
 
