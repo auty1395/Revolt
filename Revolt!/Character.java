@@ -66,35 +66,39 @@ public class Character
 		
 		for(int i = 0; i < walls.length; i++)
 		{
-			if(x + width > walls[i].x && x < walls[i].x + walls[i].width)
+			if((y + yvel*time + height > walls[i].y) && (y + yvel*time < walls[i].y + walls[i].height)) //in between the top and bottom of the wall
 			{
-				//System.out.println("a");
-				if(walls[i].y < y + height && y < walls[i].y)
-				
+				System.out.println ("a");
+				if((x + width <= walls[i].x) && (x + width + xvel*time > walls[i].x)) // moving through the plane created by the walls left face
 				{
-					
-					
-						//System.out.println("b");
-						isCollidingDown = true;
-						y = walls[i].y - height;
-						yvel = 0;
-					
+					System.out.println ("a1");
+					x = walls[i].x - width; //colliding left next frame, set x to wall's x
+					xvel = 0;
 				}
-				else if( y < walls[i].y + walls[i].height && y + height > walls[i].y)
+				else if((x >= walls[i].x + walls[i].width) && (x + xvel*time < walls[i].x + walls[i].width))
 				{
-				//	System.out.println("c");
-					//xvel = 0;
-					if( xvel > 0) x = walls[i].x - width;
-					else if(xvel < 0) x = walls[i].x + walls[i].width;
-					else if (xvel == 0) 
-					{
-						y = walls[i].y + walls[i].height;
-						yvel = 0;
-					}
-						
+					System.out.println ("a2");
+					x = walls[i].x + walls[i].width;
+					xvel = 0;
 				}
-				
 			}
+			if((x + xvel*time + width > walls[i].x) && (x + xvel*time < walls[i].x + walls[i].width)) //in between the left and right sides of the wall
+			{
+				System.out.println ("b");
+				if((y + height <= walls[i].y + 1) && (y + height + yvel*time > walls[i].y))
+				{
+					System.out.println ("b1");
+					y = walls[i].y - height;
+					yvel = 0;
+					isCollidingDown = true;
+				}
+				else if((y >= walls[i].y + walls[i].height) && (y + yvel*time < walls[i].y + walls[i].height))
+				{
+					System.out.println ("b2");
+					y = walls[i].y + walls[i].height;
+					yvel = 0;
+				}
+			}	
 		}
 		isGrounded = isCollidingDown;
 		
