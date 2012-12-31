@@ -5,7 +5,7 @@ import java.awt.*; //needed for graphics
 import java.awt.event.*; //needed for event handling
 import java.awt.image.BufferedImage;
 import java.net.*;
-import javax.imageio.*;
+
 import static java.lang.Math.*;
 
 public class gameFramework extends Applet implements Runnable, KeyListener{
@@ -42,7 +42,7 @@ public class gameFramework extends Applet implements Runnable, KeyListener{
 		player = new Character(100, 10);
 		
 		levels = new Level[NUM_LEVELS];
-		levels[0] = new Level(11, 7);
+		levels[0] = new Level(11, 7,0, player);
 		
 		levels[0].startx = 0;
 		levels[0].starty = 500;
@@ -202,6 +202,7 @@ public class gameFramework extends Applet implements Runnable, KeyListener{
 		}else if(e.getKeyCode()==KeyEvent.VK_RIGHT) {
 			player.movingRight = false;
 		}
+		
 	}
 	
 	/**
