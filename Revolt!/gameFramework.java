@@ -65,6 +65,8 @@ public class gameFramework extends Applet implements Runnable, KeyListener, Mous
 		levels[0].starty = 350;
 		levels[0].endx = 650;
 		levels[0].endy = 480;
+		levels[0].endxDif = 30;
+		levels[0].endyDif = 30;
 		
 		levels[0].shelves[0] = new Platform(0,284,150);
 		levels[0].shelves[1] = new Platform(212,155,37);
@@ -150,9 +152,9 @@ public class gameFramework extends Applet implements Runnable, KeyListener, Mous
 			
 			g.drawString("(" + mouseX + "," + mouseY + ")", 690, 10);
 			
+			g.drawString("FINISH", levels[currentLevel].endx - 20, levels[currentLevel].endy);
+			g.drawRect(levels[currentLevel].endx - levels[currentLevel].endxDif, levels[currentLevel].endy - levels[currentLevel].endyDif, 2*levels[currentLevel].endxDif, 2*levels[currentLevel].endyDif);
 			
-			
-			//####################  addition-- draw lines where platforms are and boxes around walls ##########
 			
 			g.setColor(Color.blue);
 			for (int i = 0; i < levels[currentLevel].shelves.length; i++)  //draw blue lines where each platform is
@@ -170,9 +172,7 @@ public class gameFramework extends Applet implements Runnable, KeyListener, Mous
 								(int)	levels[currentLevel].walls[i].y,
 								(int)	levels[currentLevel].walls[i].width,
 								(int)	levels[currentLevel].walls[i].height);
-			}
-			//#################### end addition
-			
+			}	
 			
 			g.setColor(prev); // reset the color of g to what it was before this draw method
 
@@ -226,7 +226,7 @@ public class gameFramework extends Applet implements Runnable, KeyListener, Mous
 			player.update(framePeriod, levels[currentLevel].shelves, levels[currentLevel].walls);
 			levels[currentLevel].update(framePeriod);
 			
-			if(abs(player.x - levels[currentLevel].endx) < 30 && abs(player.y - levels[currentLevel].endy) < 30)
+			if(abs(player.x - levels[currentLevel].endx) < levels[currentLevel].endxDif && abs(player.y - levels[currentLevel].endy) < levels[currentLevel].endyDif)
 			{	
 				currentLevel++;
 				if(currentLevel >= NUM_LEVELS) currentLevel = 0;
