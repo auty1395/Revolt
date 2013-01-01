@@ -20,6 +20,7 @@ public class gameFramework extends Applet implements Runnable, KeyListener, Mous
 	Bird bird;
 	Image background0;
 	Image birdsprite;
+	Image playerIdle;
 	
 	final int NUM_LEVELS = 1;
 	Level[] levels;
@@ -41,21 +42,20 @@ public class gameFramework extends Applet implements Runnable, KeyListener, Mous
 		resize(750,600); //can be set to any dimension desired
 		// INITIALIZE ANY OF YOUR OWN VARIABLES HERE
 		
-		player = new Character(100, 10); //initalize player
 		levels = new Level[NUM_LEVELS]; //initalize level array
 		
 		try  //try to load level background images;
 		{
 			background0 = getImage(new URL(getCodeBase(), "Revolt! Lvl1 The Apartment.jpeg"));
 			birdsprite = getImage(new URL(getCodeBase(), "bird.gif"));
-			
+			playerIdle = getImage(new URL(getCodeBase(), "playerIdle.gif"));
 		}
 		catch(MalformedURLException e)
 		{
 			System.out.println(e);
 		}
 		
-		
+		player = new Character(100, 10, playerIdle); //initalize player
 		bird = new Bird(birdsprite, 200, 400, 70, 70);
 		
 		levels[0] = new Level(11, 7,1, player, background0 );

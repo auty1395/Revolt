@@ -13,11 +13,14 @@ public class Character
 	final double jumpVelocity = 1100;
 	final double descendVelocity = 200;
 	
+	Image idle;
 	
-	Character(int x, int y)
+	
+	Character(int x, int y, Image idle)
 	{
 		this.x = x;
 		this.y = y;
+		this.idle = idle;
 	}
 	
 	public void draw(Graphics g)
@@ -28,9 +31,8 @@ public class Character
 		else if(movingRight)g.setColor(Color.red);
 		else g.setColor(Color.green);
 		
-		g.fillRect((int)(x), (int)(y), width, height);
+		g.drawImage(idle,(int)x,(int) y, width, height, null);
 	}
-	
 	
 	public void update(long ms, Platform[] shelfs, Wall[] walls)
 	{
